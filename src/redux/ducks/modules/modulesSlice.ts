@@ -1,12 +1,8 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import axios from 'axios';
-import { Module } from './modulesTypes';
-
-interface ModuleState {
-    modules: Module[];
-    loading: boolean;
-    error: string | null;
-}
+import { modulesApi } from '../../../apis/apis';
+import { ModuleState } from './modulesTypes';
+import { Module } from '../../../apis/apiTypes';
+import { ERROR_MSG } from '../../../constants';
 
 const initialState: ModuleState = {
     modules: [],
@@ -15,8 +11,8 @@ const initialState: ModuleState = {
 };
 
 export const fetchModules = createAsyncThunk('modules/fetchModules', async () => {
-    const response = await axios.get<Module[]>('https://www.index.hr/oglasi/mock/modules');
-    return response.data;
+    const data = await modulesApi();
+    return data;
 });
 
 const moduleSlice = createSlice({
@@ -35,7 +31,7 @@ const moduleSlice = createSlice({
         })
         .addCase(fetchModules.rejected, (state, action) => {
           state.loading = false;
-          state.error = action.error.message ?? 'Failed to fetch modules';
+          state.error = action.error.message ?? `${ERROR_MSG} modules`;
         });
     },
   });

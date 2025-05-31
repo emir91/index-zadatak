@@ -1,6 +1,7 @@
-export type Stats = {
-    totalAdsCount: number;
-    newAdsCount: number;
-    tradeCount: number;
-    registeredUserCount: number;
+import { Stats } from "../../../apis/apiTypes";
+
+export type StatsState = {
+  stats: Stats | null;
+  loading: boolean;
+  error: string | null;
 };

@@ -1,12 +1,8 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import axios from 'axios';
-import { LatestAd } from './latestAdsTypes';
-
-type LatestAdState = {
-    latestAds: LatestAd[];
-    loading: boolean;
-    error: string | null;
-};
+import { latestAdsApi } from '../../../apis/apis';
+import { LatestAd } from '../../../apis/apiTypes';
+import { LatestAdState } from './latestAdsTypes';
+import { ERROR_MSG } from '../../../constants';
 
 const initialState: LatestAdState = {
     latestAds: [],
@@ -15,8 +11,8 @@ const initialState: LatestAdState = {
 };
 
 export const fetchLatestAds = createAsyncThunk('latestAds/fetchLatestAds', async () => {
-    const response = await axios.get<LatestAd[]>('https://www.index.hr/oglasi/mock/latestAds');
-    return response.data;
+    const data = await latestAdsApi();
+    return data;
 });
 
 const latestAdSlice = createSlice({
@@ -35,7 +31,7 @@ const latestAdSlice = createSlice({
         })
         .addCase(fetchLatestAds.rejected, (state, action) => {
           state.loading = false;
-          state.error = action.error.message ?? 'Failed to fetch latest ads';
+          state.error = action.error.message ?? `${ERROR_MSG} latest ads`;
         });
     },
 });

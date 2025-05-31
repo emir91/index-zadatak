@@ -1,12 +1,8 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import axios from 'axios';
-import { Stats } from './statsTypes';
-
-type StatsState = {
-    stats: Stats | null;
-    loading: boolean;
-    error: string | null;
-};
+import { statsApi } from '../../../apis/apis';
+import { Stats } from '../../../apis/apiTypes';
+import { StatsState } from './statsTypes';
+import { ERROR_MSG } from '../../../constants';
 
 const initialState: StatsState = {
     stats: null,
@@ -15,8 +11,8 @@ const initialState: StatsState = {
 };
 
 export const fetchStats = createAsyncThunk('stats/fetchStats', async () => {
-    const response = await axios.get<Stats>('https://www.index.hr/oglasi/mock/stats');
-    return response.data;
+    const data = await statsApi();
+    return data;
 });
 
 const statsSlice = createSlice({
@@ -35,7 +31,7 @@ const statsSlice = createSlice({
         })
         .addCase(fetchStats.rejected, (state, action) => {
           state.loading = false;
-          state.error = action.error.message ?? 'Failed to fetch stats';
+          state.error = action.error.message ?? `${ERROR_MSG} fetch stats`;
         });
     },
 });
