@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './LatestAds.module.css'; // Adjust this path as needed
+import styles from './LatestAds.module.css';
 
 interface AdSummary {
   makeYear: string;
